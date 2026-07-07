@@ -1,36 +1,45 @@
 module parser (
 
-    input  logic       clk,
-    input  logic       rst_n,
+    input  logic        clk,
+    input  logic        rst_n,
 
-    input  logic       byte_valid,
-    input  logic [7:0] byte_in,
+    input  logic        valid,
+    input  logic [7:0]  byte_in,
 
-    output logic [31:0] message,
-    output logic        message_valid
+    output logic [103:0] message,
+    output logic         message_valid
 
 );
 
-always_ff @(posedge clk) begin
+    logic [3:0] byte_count;
 
-    if (!rst_n) begin
-        message       <= 32'd0;
-        message_valid <= 1'b0;
-    end
-    else begin
+    always_ff @(posedge clk) begin
 
-        message_valid <= 1'b0;
+        if (!rst_n) begin
+            message       <= '0;
+            message_valid <= 1'b0;
+            byte_count    <= 4'd0;
+        end
+        else begin
 
-        if (byte_valid) begin
+            message_valid <= 1'b0;
 
-            message <= {message[23:0], byte_in};
+            if (valid) begin
 
-            if (message[31:24] != 8'h00)
-                message_valid <= 1'b1;
+                message <= {message[95:0], byte_in};
+
+                if (byte_count == 4'd12) begin
+                    message_valid <= 1'b1;
+                    byte_count    <= 4'd0;
+                end
+                else begin
+                    byte_count <= byte_count + 1'b1;
+                end
+
+            end
 
         end
-    end
 
-end
+    end
 
 endmodule
