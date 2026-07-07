@@ -8,52 +8,17 @@ module fsm (
     output logic done
 );
 
-    typedef enum logic [1:0] {
-        IDLE,
-        STORE,
-        COUNT,
-        DONE
-    } state_t;
+always_comb begin
 
-    state_t state, next_state;
+    reg_en   = 0;
+    count_en = 0;
+    done     = 0;
 
-    always_ff @(posedge clk) begin
-        if (!rst_n)
-            state <= IDLE;
-        else
-            state <= next_state;
+    if (byte_valid) begin
+        reg_en   = 1;
+        count_en = 1;
     end
 
-    always_comb begin
-        next_state = state;
-
-        reg_en   = 0;
-        count_en = 0;
-        done     = 0;
-
-        case (state)
-
-            IDLE: begin
-                if (byte_valid)
-                    next_state = STORE;
-            end
-
-            STORE: begin
-                reg_en = 1;
-                next_state = COUNT;
-            end
-
-            COUNT: begin
-                count_en = 1;
-                next_state = DONE;
-            end
-
-            DONE: begin
-                done = 1;
-                next_state = IDLE;
-            end
-
-        endcase
-    end
+end
 
 endmodule

@@ -15,6 +15,8 @@ module top (
     logic reg_en;
     logic count_en;
 
+assign packet_done = (byte_count == 4);
+
     byte_receiver u_byte_receiver (
         .clk(clk),
         .rst_n(rst_n),
@@ -28,7 +30,7 @@ module top (
         .byte_valid(byte_valid),
         .reg_en(reg_en),
         .count_en(count_en),
-        .done(packet_done)
+        .done()
     );
 
     register u_register (
