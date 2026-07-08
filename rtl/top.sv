@@ -12,9 +12,16 @@ module top (
 );
 
     logic byte_valid;
-    logic reg_en;
-    logic count_en;
+logic reg_en;
+logic count_en;
 
+logic [103:0] message;
+logic          message_valid;
+logic [7:0]   msg_type;
+logic [31:0]  order_id;
+logic [31:0]  price;
+logic [31:0]  quantity;
+logic         decoded_valid;
 assign packet_done = (byte_count == 4);
 
     byte_receiver u_byte_receiver (
@@ -48,4 +55,21 @@ assign packet_done = (byte_count == 4);
         .count(byte_count)
     );
 
+parser u_parser (
+    .clk(clk),
+    .rst_n(rst_n),
+    .valid(byte_valid),
+    .byte_in(data_in),
+    .message(message),
+    .message_valid(message_valid)
+);
+message_decoder u_message_decoder (
+    .message(message),
+    .message_valid(message_valid),
+    .msg_type(msg_type),
+    .order_id(order_id),
+    .price(price),
+    .quantity(quantity),
+    .decoded_valid(decoded_valid)
+);
 endmodule

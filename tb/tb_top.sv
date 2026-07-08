@@ -33,23 +33,25 @@ module tb_top;
 
         #10;
         rst_n = 1;
+        // 13-byte market data message
 
-        // Byte 1
-        #10;
         rx_valid = 1;
-        data_in  = 8'h41;
 
-        // Byte 2
-        #10;
-        data_in = 8'h10;
+        #10; data_in = 8'h41; // Message Type ('A')
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h01; // Order ID = 1
 
-        // Byte 3
-        #10;
-        data_in = 8'h64;
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h64; // Price = 100
 
-        // Byte 4
-        #10;
-        data_in = 8'h05;
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h00;
+        #10; data_in = 8'h0A; // Quantity = 10
 
         #10;
         rx_valid = 0;
