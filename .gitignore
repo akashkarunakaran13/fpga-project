@@ -1,14 +1,15 @@
-# Simulation outputs
+# Simulation build outputs
+sim/*
 *.vcd
 
-# Compiled simulators
-sim/*
+# Vivado / synthesis outputs
+syn/*.rpt
+*.jou
+*.log
+.Xil/
+vivado*.backup*
 
-# Backup files
+# Editor / temp
 *.save
-
-# GTKWave save files
 *.gtkw
-
-# Temporary files
 *.tmp

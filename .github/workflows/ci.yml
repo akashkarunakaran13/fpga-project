@@ -1,0 +1,23 @@
+name: sim
+on: [push, pull_request]
+
+jobs:
+  icarus:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Icarus Verilog
+        run: sudo apt-get update && sudo apt-get install -y iverilog
+
+      - name: Compile
+        run: |
+          mkdir -p sim
+          iverilog -g2012 -o sim/top_sim \
+            rtl/axis_skid_buffer.sv rtl/byte_receiver.sv rtl/parser.sv \
+            rtl/message_decoder.sv rtl/top.sv tb/tb_top.sv
+
+      - name: Simulate
+        run: |
+          vvp sim/top_sim | tee sim.log
+          grep -q "TB_TOP: PASS" sim.log
