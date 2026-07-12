@@ -11,41 +11,50 @@ module message_decoder (
 
 );
 
-always_comb begin
+    // Pre-slice the message fields with continuous assignments. This keeps the
+    // combinational decode below free of constant part-selects of a vector
+    // inside an always_* block, which Icarus reports as "sorry: constant selects
+    // in always_* processes". Behaviour is identical.
+    wire [7:0]  f_type  = message[103:96];
+    wire [31:0] f_oid   = message[95:64];
+    wire [31:0] f_price = message[63:32];
+    wire [31:0] f_qty   = message[31:0];
 
-    // Default outputs
-    msg_type      = message[103:96];
-    order_id      = 32'd0;
-    price         = 32'd0;
-    quantity      = 32'd0;
-    decoded_valid = 1'b0;
+    always_comb begin
 
-    if (message_valid) begin
+        // Default outputs
+        msg_type      = f_type;
+        order_id      = 32'd0;
+        price         = 32'd0;
+        quantity      = 32'd0;
+        decoded_valid = 1'b0;
 
-        decoded_valid = 1'b1;
+        if (message_valid) begin
 
-        case (message[103:96])
+            decoded_valid = 1'b1;
 
-            8'h41: begin // 'A' = Add Order
-                order_id = message[95:64];
-                price    = message[63:32];
-                quantity = message[31:0];
-            end
+            case (f_type)
 
-            8'h50: begin // 'P' = Trade
-                order_id = message[95:64];
-                price    = message[63:32];
-                quantity = message[31:0];
-            end
+                8'h41: begin // 'A' = Add Order
+                    order_id = f_oid;
+                    price    = f_price;
+                    quantity = f_qty;
+                end
 
-            default: begin
-                decoded_valid = 1'b0;
-            end
+                8'h50: begin // 'P' = Trade
+                    order_id = f_oid;
+                    price    = f_price;
+                    quantity = f_qty;
+                end
 
-        endcase
+                default: begin
+                    decoded_valid = 1'b0;
+                end
+
+            endcase
+
+        end
 
     end
-
-end
 
 endmodule
