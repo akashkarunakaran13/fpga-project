@@ -1,6 +1,6 @@
 # Streaming Market-Data Message Decoder
 
-![sim](https://github.com/<user>/fpga-project/actions/workflows/ci.yml/badge.svg)
+![sim](https://github.com/akashkarunakaran13/fpga-project/actions/workflows/ci.yml/badge.svg)
 
 A compact, fully-verified FPGA datapath (SystemVerilog) that ingests a byte
 stream, assembles fixed-layout market-data messages, and decodes them into typed
@@ -11,7 +11,6 @@ The project is deliberately small and focused: one clean datapath, verified with
 a randomized self-checking testbench and delivered with a synthesis flow —
 rather than a broad, shallow feature set.
 
-> Replace `<user>` in the badge URL with your GitHub namespace after the first push.
 
 ---
 
